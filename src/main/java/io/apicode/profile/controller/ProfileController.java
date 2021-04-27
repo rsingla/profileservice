@@ -42,21 +42,9 @@ public class ProfileController {
 	public @ResponseBody Profile createProfile(@Valid @RequestBody Profile profile)
 			throws InterruptedException, ExecutionException {
 
-		
-		Set<ConstraintViolation<Profile>> violations = validator.validate(profile);
+		Profile profileResponse = userService.saveProfileDetails(profile);
+		return profileResponse;
 
-		if (!violations.isEmpty()) {
-			for (ConstraintViolation<Profile> violation : violations) {
-				log.info("" + violation.getConstraintDescriptor());
-				log.info(violation.getMessage());
-			}
-		} else {
-
-			Profile profileResponse = userService.saveProfileDetails(profile);
-			return profileResponse;
-		}
-
-		return null;
 	}
 
 }
