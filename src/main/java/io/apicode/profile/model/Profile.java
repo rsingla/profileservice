@@ -19,21 +19,32 @@ public class Profile implements Serializable {
 
 	@JsonProperty("Id")
 	private String id;
+	
 	@JsonProperty("first_name")
 	private String firstName;
+	
 	@JsonProperty("last_name")
 	private String lastName;
+	
 	@JsonProperty("date_of_birth")
 	private String dateOfBirth;
+	
 	@JsonProperty("phone_number")
 	private String phoneNumber;
+	
 	@JsonProperty("timezone")
 	private String timezone;
+	
 	@JsonProperty("email")
 	private String email;
+	
 	@JsonProperty("address")
 	@Valid
 	private Address address;
+	
+	@JsonProperty("time_updated")
+	private String timeUpdated;
+	
 	@JsonIgnore
 	@Valid
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -131,6 +142,17 @@ public class Profile implements Serializable {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
+	}
+	
+
+	@JsonProperty("time_updated")
+	public String getTimeUpdated() {
+		return timeUpdated;
+	}
+
+	@JsonProperty("time_updated")
+	public void setTimeUpdated(String timeUpdated) {
+		this.timeUpdated = timeUpdated;
 	}
 
 	@Override

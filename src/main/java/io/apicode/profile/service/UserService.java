@@ -18,48 +18,56 @@ import io.apicode.profile.model.Profile;
 @Service
 public class UserService {
 
-    public static final String COL_NAME="profiles";
+	public static final String COL_NAME = "profiles";
 
-    public String saveProfileDetails(Profile profile) throws InterruptedException, ExecutionException {
-    	String id = getID();
-        ApiFuture<WriteResult> collectionsApiFuture = InitId(id).set(profile);
-        return collectionsApiFuture.get().getUpdateTime().toString();
-    }
+	public Profile saveProfileDetails(Profile profile) throws InterruptedException, ExecutionException {
+		String id = getID();
+		ApiFuture<WriteResult> collectionsApiFuture = InitId(id).set(profile);
 
-    public Profile getProfileDetails(String id) throws InterruptedException, ExecutionException {
-        ApiFuture<DocumentSnapshot> future = InitId(id).get();
+		//Get the Updated time 
+		String time = collectionsApiFuture.get().getUpdateTime().toString();
 
-        DocumentSnapshot document = future.get();
+		//Set the information before returning
+		profile.setId(id);
+		profile.setTimeUpdated(time);
 
-        Profile profile = null;
+		return profile;
+	}
 
-        if(document.exists()) {
-            profile = document.toObject(Profile.class);
-            return profile;
-        }else {
-            return null;
-        }
-    }
+	public Profile getProfileDetails(String id) throws InterruptedException, ExecutionException {
+		ApiFuture<DocumentSnapshot> future = InitId(id).get();
 
-    public String updateProfileDetails(Profile profile, String id) throws InterruptedException, ExecutionException {
-        ApiFuture<WriteResult> collectionsApiFuture = InitId(id).set(profile);
-        return collectionsApiFuture.get().getUpdateTime().toString();
-    }
+		DocumentSnapshot document = future.get();
 
-    public String deleteProfile(String id) {
-        InitId(id).delete();
-        return "Document with Profile ID "+ id +" has been deleted";
-    }
+		Profile profile = null;
 
-    public String getID() {
-    	UUID uuid = UUID.randomUUID();
-    	return uuid.toString();
-    }
-    
-    private DocumentReference InitId(String id) {
-    	  Firestore dbFirestore = FirestoreClient.getFirestore();
-          DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
-          return documentReference;
-    }
-    
+		if (document.exists()) {
+			profile = document.toObject(Profile.class);
+			return profile;
+		} else {
+			return null;
+		}
+	}
+
+	public String updateProfileDetails(Profile profile, String id) throws InterruptedException, ExecutionException {
+		ApiFuture<WriteResult> collectionsApiFuture = InitId(id).set(profile);
+		return collectionsApiFuture.get().getUpdateTime().toString();
+	}
+
+	public String deleteProfile(String id) {
+		InitId(id).delete();
+		return "Document with Profile ID " + id + " has been deleted";
+	}
+
+	public String getID() {
+		UUID uuid = UUID.randomUUID();
+		return uuid.toString();
+	}
+
+	private DocumentReference InitId(String id) {
+		Firestore dbFirestore = FirestoreClient.getFirestore();
+		DocumentReference documentReference = dbFirestore.collection(COL_NAME).document(id);
+		return documentReference;
+	}
+
 }
