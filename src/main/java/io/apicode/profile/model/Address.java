@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -18,14 +20,20 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Address implements Serializable {
 
 	@JsonProperty("street1")
+	@NotNull(message = "Street1 cannot be null")
 	private String street1;
 	@JsonProperty("street2")
 	private String street2;
 	@JsonProperty("city")
+	@NotNull(message = "City cannot be null")
 	private String city;
 	@JsonProperty("state")
+	@NotNull(message = "State cannot be null")
 	private String state;
 	@JsonProperty("zip_code")
+	@NotNull(message = "ZipCode cannot be null")
+	@Size(min = 5, max = 20, message 
+    = "Zip Code cannot be less than 5 character")
 	private String zipCode;
 	@JsonIgnore
 	@Valid

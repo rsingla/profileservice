@@ -1,6 +1,14 @@
 package io.apicode.profile.controller;
 
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Logger;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +27,11 @@ public class ProfileController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	Validator validator;
+
+	Logger log = Logger.getLogger("Profile Controller");
+
 	@GetMapping(path = "profile/{id}", produces = { "application/json" })
 	public Profile getProfileDetails(@PathVariable String id) throws InterruptedException, ExecutionException {
 		Profile profile = userService.getProfileDetails(id);
@@ -26,10 +39,24 @@ public class ProfileController {
 	}
 
 	@PostMapping(path = "profile", produces = { "application/json" })
-	public @ResponseBody Profile createProfile(@RequestBody Profile profile)
+	public @ResponseBody Profile createProfile(@Valid @RequestBody Profile profile)
 			throws InterruptedException, ExecutionException {
-		Profile profileResponse = userService.saveProfileDetails(profile);
-		return profileResponse;
+
+		
+		Set<ConstraintViolation<Profile>> violations = validator.validate(profile);
+
+		if (!violations.isEmpty()) {
+			for (ConstraintViolation<Profile> violation : violations) {
+				log.info("" + violation.getConstraintDescriptor());
+				log.info(violation.getMessage());
+			}
+		} else {
+
+			Profile profileResponse = userService.saveProfileDetails(profile);
+			return profileResponse;
+		}
+
+		return null;
 	}
 
 }
