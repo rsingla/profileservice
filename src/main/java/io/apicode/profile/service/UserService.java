@@ -59,7 +59,7 @@ public class UserService {
 		return "Document with Profile ID " + id + " has been deleted";
 	}
 
-	public String getID() {
+	private String getID() {
 		UUID uuid = UUID.randomUUID();
 		return uuid.toString();
 	}
