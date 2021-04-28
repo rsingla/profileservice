@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -21,9 +23,11 @@ public class Profile implements Serializable {
 	private String id;
 	
 	@JsonProperty("first_name")
+	@NotNull(message = "First Name cannot be null")
 	private String firstName;
 	
 	@JsonProperty("last_name")
+	@NotNull(message = "Last Name cannot be null")
 	private String lastName;
 	
 	@JsonProperty("date_of_birth")
@@ -36,6 +40,8 @@ public class Profile implements Serializable {
 	private String timezone;
 	
 	@JsonProperty("email")
+	@NotNull(message = "Email cannot be null")
+	@Email(message="Email Format is incorrect")
 	private String email;
 	
 	@JsonProperty("address")
