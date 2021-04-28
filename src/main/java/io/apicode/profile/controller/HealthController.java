@@ -12,4 +12,10 @@ public class HealthController {
 		return service;
 	}
 
+	
+	@GetMapping(path = "/", produces = {"application/json"})
+	public String serviceCheck() {
+		String service = "Service Profile Service Working correctly";
+		return service;
+	}
 }
