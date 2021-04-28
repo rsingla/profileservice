@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.google.common.collect.Lists;
 
+import io.apicode.profile.model.APIException;
 import io.apicode.profile.model.ErrorDetails;
 
 @ControllerAdvice
@@ -25,6 +26,13 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
 		String bodyOfResponse = "This should be application specific";
 		return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	}
+
+	@ExceptionHandler(value = { APIException.class })
+	protected ResponseEntity<Object> handleAPIConflict(APIException ex, WebRequest request) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), null);
+
+		return new ResponseEntity<Object>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
 	@Override

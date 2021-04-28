@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.apicode.profile.model.APIException;
 import io.apicode.profile.model.Profile;
 import io.apicode.profile.service.UserService;
 
@@ -40,7 +41,15 @@ public class ProfileController {
 
 	@PostMapping(path = "profile", produces = { "application/json" })
 	public @ResponseBody Profile createProfile(@Valid @RequestBody Profile profile)
-			throws InterruptedException, ExecutionException {
+			throws InterruptedException, ExecutionException, APIException {
+		
+		//Validate Email 
+		
+		String id = userService.getByEmail(profile.getEmail());
+		
+		if(id != null) {
+			throw new APIException("User already Exists " + id);
+		}
 
 		Profile profileResponse = userService.saveProfileDetails(profile);
 		return profileResponse;
