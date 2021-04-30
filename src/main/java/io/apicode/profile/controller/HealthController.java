@@ -1,21 +1,33 @@
 package io.apicode.profile.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.HealthComponent;
+import org.springframework.boot.actuate.health.HealthEndpoint;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.apicode.profile.model.Health;
+
 @RestController
 public class HealthController {
-	
-	@GetMapping(path = "profile/health", produces = {"application/json"})
-	public String checkHealth() {
-		String service = "Service Profile Service";
-		return service;
-	}
 
-	
-	@GetMapping(path = "/", produces = {"application/json"})
-	public String serviceCheck() {
+	@Autowired
+	private HealthEndpoint healthEndpoint;
+
+	@GetMapping(path = "/", produces = { "application/json" })
+	public Health serviceCheck() {
+
+		Health health = new Health();
+
+		HealthComponent readinessHealthComponent = healthEndpoint.healthForPath("readiness");
+		HealthComponent livenessHealthComponent = healthEndpoint.healthForPath("liveness");
+
 		String service = "Service Profile Service Working correctly";
-		return service;
+
+		health.setLiveness(livenessHealthComponent);
+		health.setReadiness(readinessHealthComponent);
+		health.setServicedetails(service);
+
+		return health;
 	}
 }
