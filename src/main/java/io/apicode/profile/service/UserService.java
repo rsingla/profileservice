@@ -57,9 +57,17 @@ public class UserService {
 		}
 	}
 
-	public String updateProfileDetails(Profile profile, String id) throws InterruptedException, ExecutionException {
+	public Profile updateProfileDetails(Profile profile, String id) throws InterruptedException, ExecutionException {
 		ApiFuture<WriteResult> collectionsApiFuture = InitId(id).set(profile);
-		return collectionsApiFuture.get().getUpdateTime().toString();
+		// Get the Updated time
+		String time = collectionsApiFuture.get().getUpdateTime().toString();
+
+		// Set the information before returning
+		profile.setId(id);
+		profile.setTimeUpdated(time);
+		
+		return profile;
+
 	}
 
 	/**
