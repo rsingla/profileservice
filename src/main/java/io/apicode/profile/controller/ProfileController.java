@@ -34,7 +34,7 @@ public class ProfileController {
 	Logger log = Logger.getLogger("Profile Controller");
 
 	@GetMapping(path = "profile/{id}", produces = { "application/json" })
-	public Profile getProfileDetails(@PathVariable String id) throws InterruptedException, ExecutionException {
+	public @ResponseBody Profile getProfileDetails(@PathVariable String id) throws InterruptedException, ExecutionException {
 		Profile profile = userService.getProfileDetails(id);
 		return profile;
 	}
@@ -106,7 +106,7 @@ public class ProfileController {
 	}
 
 	@DeleteMapping(path = "profile/{id}", produces = { "application/json" })
-	public String deleteProfileById(@PathVariable String id) throws InterruptedException, ExecutionException {
+	public @ResponseBody String deleteProfileById(@PathVariable String id) throws InterruptedException, ExecutionException {
 		String info = userService.deleteProfile(id);
 		return info;
 	}
